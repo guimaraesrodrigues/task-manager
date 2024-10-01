@@ -1,0 +1,17 @@
+/* login.component.css */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Make the container take up full viewport height */
+
+    >.card {
+        display: flex;
+        flex-direction: column;
+        height: 400px;
+        width: 400px;
+        justify-content: center;
+        align-items: center;
+    }
+  }
+  
