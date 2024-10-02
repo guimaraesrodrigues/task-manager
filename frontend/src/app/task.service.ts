@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 interface Task {
@@ -24,7 +24,10 @@ export class TaskService {
   }
 
   deleteTask(taskId: string): Observable<any> { // Adjust return type if needed
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json' // Important for CORS preflight
+    });
     const url = `${this.apiUrl}/${taskId}`; // Construct the URL for deleting the task
-    return this.http.delete(url);
+    return this.http.delete(url, { headers: headers });
   }
 }

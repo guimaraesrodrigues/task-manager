@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Make the container take up full viewport height */
+
+    >.card {
+        height: 400px;
+        width: 400px;
+
+        >.form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+  }

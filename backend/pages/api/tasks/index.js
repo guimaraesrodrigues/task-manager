@@ -1,30 +1,3 @@
-// /pages/api/tasks/index.js (Example protected route)
-// import Task from '../models/Task'; // Assuming you have a Task model
-// import jwt from 'jsonwebtoken';
-
-// export default async (req, res) => {
-//   try {
-//     await connectDB();
-
-//     // Get token from cookie or Authorization header
-//     const token = req.cookies.token || req.headers.authorization.split(' ')[1];
-
-//     if (!token) {
-//       return res.status(401).json({ message: 'Unauthorized' });
-//     }
-
-//     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-//     const userId = decodedToken.userId;
-
-//     // Now you have the userId, you can fetch tasks for this user
-//     const tasks = await Task.find({ userId }); // Assuming tasks are associated with a user
-
-//     res.status(200).json(tasks);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
 import connectDB from '../db';
 import { cors, runMiddleware } from '../../middleware/cors';
 import { ObjectId } from 'mongodb';
@@ -34,16 +7,16 @@ export default async function handler(req, res) {
   await runMiddleware(req, res, cors);
 
   try {
-    const { client, db } = await connectDB();
+    const { db } = await connectDB();
     const tasksCollection = db.collection('tasks');
 
     if (req.method === 'OPTIONS') {
-      console.log('Handling OPTIONS request'); // Add this for debugging
-      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200'); // Replace with your Angular app's origin
+      console.log('HI IM HERE PLS HELP')
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       res.status(200).end();
-      return; // Important: Exit early
+      return; 
     }
     
     switch (req.method) {
@@ -92,7 +65,8 @@ export default async function handler(req, res) {
 
       case 'DELETE':
         await runMiddleware(req, res, authenticateToken); // Apply authentication middleware
-          const { id } = req.query; // Assuming you're passing the task ID in the URL
+          const searchParams = request.nextUrl.searchParams;
+          const id = searchParams.get('id');
           const deleteResult = await tasksCollection.deleteOne({ _id: new ObjectId(id) });
   
           if (deleteResult.deletedCount === 1) {
@@ -108,7 +82,5 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
-  } finally {
-    await client.close();
   }
 }

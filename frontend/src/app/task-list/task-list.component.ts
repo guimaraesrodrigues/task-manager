@@ -10,6 +10,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-list',
@@ -33,7 +34,8 @@ export class TaskListComponent implements OnInit{
 
   constructor(
     private taskService: TaskService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -68,6 +70,14 @@ export class TaskListComponent implements OnInit{
         map(tasks => tasks.filter(t => t._id !== task._id))
       );
     });
+  }
+
+  logout() {
+    // 1. Clear any authentication tokens or data (e.g., from localStorage).
+    localStorage.removeItem('token'); 
+
+    // 2. Navigate to the login page or any other desired route.
+    this.router.navigate(['/login']); 
   }
 
 }

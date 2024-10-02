@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,38 +13,45 @@ import { MatCardModule } from '@angular/material/card';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule, 
     MatInputModule, 
     MatButtonModule,
     MatCardModule
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'] // Add styles if needed
+  styleUrls: ['./login.component.scss'] 
 })
 export class LoginComponent {
-  loginData = {
-    username: '',
-    password: ''
-  };
+  loginForm: FormGroup; 
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private http: HttpClient, 
+    private router: Router,
+    private fb: FormBuilder // Inject FormBuilder
+  ) {
+    // Initialize the form with FormBuilder
+    this.loginForm = this.fb.group({
+      username: ['', [Validators.required]], // Add validators as needed
+      password: ['', [Validators.required]]
+    });
+  }
 
   onSubmit() {
-    this.http.post('http://localhost:3001/api/login', this.loginData) // Adjust the URL if needed
-      .subscribe(
-        (response: any) => {
-          console.log('Login successful:', response);
-          // Store the JWT token (e.g., in localStorage or a cookie)
-          localStorage.setItem('token', response.token); // Example using localStorage
-
-          // Redirect to the desired page after successful login
-          this.router.navigate(['/']); // Example redirect to home page
-        },
-        (error) => {
-          console.error('Login error:', error);
-          // Handle login errors, e.g., display an error message
-        }
-      );
+    if (this.loginForm.valid) { 
+      this.http.post('http://localhost:3001/api/login', this.loginForm.value)
+        .subscribe(
+          (response: any) => {
+            console.log('Login successful:', response);
+            localStorage.setItem('token', response.token); 
+            this.router.navigate(['/']); 
+          },
+          (error) => {
+            console.error('Login error:', error);
+          }
+        );
+    } else {
+      // Handle form validation errors if needed
+    }
   }
 }

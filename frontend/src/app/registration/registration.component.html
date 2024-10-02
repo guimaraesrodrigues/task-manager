@@ -1,28 +1,22 @@
-<form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
-    <h2>Register</h2>
-  
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input 
-        type="text" 
-        id="username" 
-        name="username" 
-        [(ngModel)]="registrationData.username" 
-        required 
-      />
-    </div>
-  
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        [(ngModel)]="registrationData.password" 
-        required 
-      />
-    </div>
-  
-    <button type="submit" [disabled]="!registrationForm.form.valid">Register</button>
-  </form>
-  
+<div class="container">
+  <mat-card class="card">
+
+    <form [formGroup]="registerForm" class="form">
+      <h2>Register new user</h2>
+
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput type="text" formControlName="username">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password">
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="registerForm.invalid">
+        Register
+      </button>
+    </form>
+  </mat-card>
+</div>
